@@ -1,7 +1,9 @@
+import { RoleResponse } from "../role/RoleResponse";
+
 export interface UserResponse {
   id: string;
   name: string;
   email: string;
-  roleId: string;
+  role: RoleResponse;
   createdAt: Date;
 }

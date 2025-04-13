@@ -1,5 +1,6 @@
 import express from "express";
 import UserController from "../../controllers/UserController.js";
+import { authMiddleware } from "../../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -10,6 +11,8 @@ const router = express.Router();
  *     summary: Create a new user
  *     tags:
  *       - Users
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -30,8 +33,15 @@ const router = express.Router();
  *                 type: string
  *               roleId:
  *                 type: string
+ *     responses:
+ *       201:
+ *         description: User created successfully
+ *       400:
+ *         description: Invalid request data
+ *       401:
+ *         description: Unauthorized
  */
-router.post("/users", UserController.createUser.bind(UserController));
+router.post("/", authMiddleware, UserController.createUser.bind(UserController));
 
 /**
  * @swagger
@@ -40,8 +50,15 @@ router.post("/users", UserController.createUser.bind(UserController));
  *     summary: Get all users
  *     tags:
  *       - Users
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of users
+ *       401:
+ *         description: Unauthorized
  */
-router.get("/users", UserController.getAllUsers.bind(UserController));
+router.get("/", authMiddleware, UserController.getAllUsers.bind(UserController));
 
 /**
  * @swagger
@@ -50,14 +67,23 @@ router.get("/users", UserController.getAllUsers.bind(UserController));
  *     summary: Get user by ID
  *     tags:
  *       - Users
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
  *         required: true
  *         schema:
  *           type: string
+ *     responses:
+ *       200:
+ *         description: User data
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: User not found
  */
-router.get("/users/:id", UserController.getUserById.bind(UserController));
+router.get("/:id", authMiddleware, UserController.getUserById.bind(UserController));
 
 /**
  * @swagger
@@ -66,6 +92,8 @@ router.get("/users/:id", UserController.getUserById.bind(UserController));
  *     summary: Update a user by ID
  *     tags:
  *       - Users
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
@@ -87,8 +115,17 @@ router.get("/users/:id", UserController.getUserById.bind(UserController));
  *                 type: string
  *               roleId:
  *                 type: string
+ *     responses:
+ *       200:
+ *         description: User updated successfully
+ *       400:
+ *         description: Invalid request
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: User not found
  */
-router.put("/users/:id", UserController.updateUser.bind(UserController));
+router.put("/:id", authMiddleware, UserController.updateUser.bind(UserController));
 
 /**
  * @swagger
@@ -97,13 +134,22 @@ router.put("/users/:id", UserController.updateUser.bind(UserController));
  *     summary: Delete a user by ID
  *     tags:
  *       - Users
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
  *         required: true
  *         schema:
  *           type: string
+ *     responses:
+ *       200:
+ *         description: User deleted successfully
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: User not found
  */
-router.delete("/users/:id", UserController.deleteUser.bind(UserController));
+router.delete("/:id", authMiddleware, UserController.deleteUser.bind(UserController));
 
 export default router;
